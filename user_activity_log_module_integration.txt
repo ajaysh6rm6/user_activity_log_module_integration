@@ -1,0 +1,36 @@
+#userActivityLog
+
+STEP1==>>creat models
+from django.db import models
+from datetime import datetime
+
+# Create your models here.
+
+class user_activity_log(models.Model):
+    username=models.CharField(max_length = 200)
+    action=models.CharField(max_length = 200)
+    event=models.CharField(max_length = 200)
+    resultcode=models.IntegerField()      
+    duration=models.DateTimeField(default=datetime.now())
+    class Meta:
+        #unique_together = ('username', 'account')
+        db_table = 'user_activity_log'
+		
+		
+STEP2==>>create module(userActivityLog) with userActivityLog.py file
+from appName.models import user_activity_log
+
+def userActivityLog(uname,uaction,uevent,uresultcode):
+    user_activity_log.objects.create(username=uname,action=uaction, event=uevent,resultcode=uresultcode)
+	
+	
+STEP3==>>call function anywhere in your views
+from appName.modules.userActivityLog.userActivityLog import *
+def functionName(request):
+	#calling function userActivityLog
+	uname=logedinUsername
+	uaction='user'+' '+logedinUsername+' '+'login success'
+	uevent='login'
+	uresultcode='200'
+	userActivityLog(uname,uaction,uevent,uresultcode)
+	return render(request,'template.html')
